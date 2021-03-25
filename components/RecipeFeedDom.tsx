@@ -9,26 +9,30 @@ const API_URL: string = process.env.REACT_APP_API_URL ?? "";
 // This token is gonna be gone
 const API_TOKEN: string = process.env.REACT_APP_API_TOKEN ?? "";
 
-
 type Props = {
-  page: number;
-}
+  page: number
+  Feed: RecipeFeedData
+};
 
 export const RecipeFeedDom: FC<Props> = (Props) => {
   const [APIFeed, setFeed] = useState<RecipeFeedData | APIError>();
+  console.info(Props);
 
-  useEffect(() => {
-    (async () => {
-      console.warn(Props.page);
-      const FetchFeed = await GetRecipeFeed(Props.page, API_URL, API_TOKEN);
-      if (FetchFeed.type === 'APIError') {
-        console.error("API ERROR !!!");
-        console.error(FetchFeed.message);
-      } else {
-        setFeed(FetchFeed);
-      }
-    })();
-  }, [Props.page])
+  {/*
+    useEffect(() => {
+      (async () => {
+        console.warn(Props.page);
+        const FetchFeed = await GetRecipeFeed(Props.page, API_URL, API_TOKEN);
+        if (FetchFeed.type === 'APIError') {
+          console.error("API ERROR !!!");
+          console.error(FetchFeed.message);
+        } else {
+          setFeed(FetchFeed);
+        }
+      })();
+    }, [Props.page])
+  */
+  }
 
   return (
   <article>
@@ -48,11 +52,11 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
       */}
       {
         <section id="Feed">
-          {(APIFeed) ? FeedDisplay(APIFeed): <p>loading</p>}
+          {(Props.Feed) ? FeedDisplay(Props.Feed): <p>loading</p>}
         </section>
       }
       {
-        (APIFeed) && (APIFeed.type === "RecipeFeedData") ? FeedNavigator(APIFeed.links) : ""
+        (Props.Feed) && (Props.Feed.type === "RecipeFeedData") ? FeedNavigator(Props.Feed.links) : ""
       }
 
     </article>
@@ -94,56 +98,5 @@ export function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
   }
 }
 
-import { GetServerSideProps } from "next";
 
-//TODO: fix this any
-export async function getServerSideProps(context :any) {
-  // Not really nullable
-  const API_URL: string = process.env.REACT_APP_API_URL ?? "";
-  // This token is gonna be gone
-  const API_TOKEN: string = process.env.REACT_APP_API_TOKEN ?? "";
 
-  const page = context.query.page;
-
-  var OutFeed = await GetRecipeFeed(page, API_URL, API_TOKEN);
-  return {
-    props: {
-      Feed: OutFeed
-    }
-  }
-}
-
-async function GetRecipeFeed(SelectPage: number, API_URL: string, API_TOKEN: string): Promise<RecipeFeedData | APIError> {
-  return new Promise((Resolve, Reject) => {
-    const ReqHeaders: HeadersInit = new Headers();
-    ReqHeaders.set("x-api-key", API_TOKEN);
-    ReqHeaders.set("Content-Type", "application/json");
-
-    console.info(API_URL + "?page=" + encodeURIComponent(SelectPage));
-
-    if (!API_URL) {
-      console.error("API URL is not set!?");
-      return false;
-    }
-
-    fetch(API_URL + "?page=" + encodeURIComponent(SelectPage), {
-      method: "GET",
-      headers: ReqHeaders,
-    }
-    ).then((resp) => {
-      resp.json().then((jdt) => {
-        if (jdt.message) {
-          var Re = jdt as APIError;
-          Re.type = "APIError"; // !??!?!??!
-          Reject(Re);
-        } else {
-          var Rf = jdt as RecipeFeedData;
-          Rf.type = "RecipeFeedData"; // !??!?!??!
-          Resolve(Rf);
-        }
-      }).catch((err) => {
-        Reject(err);
-      });
-    })
-  })
-}
