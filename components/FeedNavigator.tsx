@@ -10,8 +10,8 @@ export function FeedNavigator(LinkObj: PageLinks) {
     if (Page < 1) { return; }
 
     router.push({
-      pathname: "/",
-      query: { page: Page }
+      pathname: router.pathname,
+      query: { page: Page , ...router.query }
     });
   }
   //const [PrevFlag, SetPrevState] = useState<boolean>();

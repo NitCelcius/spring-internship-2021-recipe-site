@@ -4,6 +4,6 @@ export function NullableImg(src: string | null, alt: string) {
   if (src) {
     return <img className="MealImg" src={src} alt={alt}></img>
   } else {
-    return <div className="MealImg">NO IMAGE</div>
+    return <div className="MealImg"><p>NO IMAGE</p></div>
   }
 }

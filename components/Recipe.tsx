@@ -1,5 +1,7 @@
 // Literally copied.
 export type Recipe = {
+  type: "Recipe";
+  
   // レシピID
   id: number;
   // レシピ名

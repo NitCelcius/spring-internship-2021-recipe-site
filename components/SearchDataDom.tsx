@@ -1,18 +1,21 @@
-import { RecipeFeedData } from "./RecipeFeedData";
 import { FeedNavigator } from "./FeedNavigator";
 import { FC, Component } from "react";
 import React, { useEffect, useState } from 'react';
 import { Recipe } from "./Recipe";
 import { APIError } from "./APIError";
 import MedMealNode from "./showcases/MedMealNode";
+import { SearchData } from "./SearchData";
+import Link from "next/link";
+
 
 type Props = {
-  page: number
-  Feed: RecipeFeedData
+  page: number;
+  keyword: string;
+  result?: SearchData;
 };
 
-export const RecipeFeedDom: FC<Props> = (Props) => {
-  const [APIFeed, setFeed] = useState<RecipeFeedData | APIError>();
+export const SearchDataDom: FC<Props> = (Props) => {
+  const [APIFeed, setFeed] = useState<SearchData | APIError>();
 
   {/*
     useEffect(() => {
@@ -32,7 +35,7 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
 
   return (
     <article>
-      <h2 className="PageTitle">レシピ一覧</h2>
+      <h2 className="PageTitle"><span className="SearchWord">{Props.keyword}</span> の検索結果</h2>
       <hr></hr>
       <form id="SearchSect" name="Search" action="/search" method="GET">
         <input id="SearchBox" type="text" placeholder="レシピを検索" name="q"></input>
@@ -48,24 +51,34 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
       */}
       {
         <section id="Feed">
-          {(Props.Feed) ? FeedDisplay(Props.Feed) : <p>loading</p>}
+          {(Props.result) ? SearchDisplay(Props.result) : <p>loading</p>}
         </section>
       }
       {
-        (Props.Feed) && (Props.Feed.type === "RecipeFeedData") ? FeedNavigator(Props.Feed.links) : ""
+        (Props.result) && (Props.result.type === "SearchData") && (Props.result.recipes) ? FeedNavigator(Props.result.links) : ""
       }
 
     </article>
   )
 }
 
-function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
-  if (FeedObj) {
-    switch (FeedObj.type) {
-      case "RecipeFeedData": {
-        return FeedObj.recipes.map((targetRecipe) => {
-          return MedMealNode(targetRecipe as Recipe);
-        });
+function SearchDisplay(SearchObj: SearchData | APIError) {
+  if (SearchObj) {
+    switch (SearchObj.type) {
+      case "SearchData": {
+        if (SearchObj.recipes) {
+          return SearchObj.recipes.map((targetRecipe) => {
+            return MedMealNode(targetRecipe as Recipe);
+          });
+        } else {
+          // Suggestion!?
+
+          return (<div className="NotFoundDiv">
+            <h2 className="HugeQuestion">&#x2753;</h2>
+            <p className="Search_NotFound">該当するレシピが見つかりませんでした<br />キーワードを変えて再度お試しください</p>
+            <p className="Search_Back"><Link href="/">新着レシピに戻る</Link></p>
+          </div>);
+        }
       }
 
       case "APIError": {
@@ -74,8 +87,8 @@ function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
 
       default: {
         console.warn("API responded with an unknown type!?");
-        console.warn(FeedObj);
-        return <p className="ErrorLabel">ERROR</p>
+        console.warn(SearchObj);
+        return <p>エラーが発生しました</p>
       }
     }
   } else {

@@ -61,11 +61,11 @@ article>* {
   width: 100%;
 }
 
-article h2:before {
+article>h2:before {
   content: "\01F37D";
 }
 
-article h2 {
+article>h2 {
   margin: 1rem 0;
 }
 
@@ -176,6 +176,34 @@ div.MealImg>p {
 .PageTitle {
   font-size: 2rem;
   text-indent: 1rem;
+}
+
+/* They are used in different pages! */
+
+/** SEARCH **/
+p.Search_NotFound {
+  font-size: 1.1rem;
+  text-align: center;
+  margin-top: 1rem;
+  letter-spacing: .1rem;
+  color: #444;
+}
+
+.HugeQuestion {
+  text-align: center;
+  font-size: 3rem;
+  content: "\02753";
+  margin-bottom: 1rem;
+}
+
+.Search_Back {
+  text-align: center;
+}
+
+/** RECIPE DETAIL **/
+
+img.MealImg {
+  
 }
 
 @media (max-width: 30rem) {

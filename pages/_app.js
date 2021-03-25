@@ -1,8 +1,8 @@
 import './App.css';
 
-export default function DefaultStyles({ Component, PageProps }) {
+export default function DefaultStyles({ Component, pageProps} ) {
   return <Component {
-    ...PageProps
+    ...pageProps
   }
   />
 };
