@@ -9,7 +9,7 @@ import { Header } from '../../components/common/Header';
 import { Footer } from '../../components/common/Footer';
 
 type Props = {
-  Result: SearchData
+  Result?: SearchData
 }
 
 // It does return some stuff
@@ -19,9 +19,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const KeywordRaw = (context.query.q instanceof Array) ? (context.query.q[0]) : context.query.q;
   const Keyword = (KeywordRaw) ? KeywordRaw : "";
 
+  let Non: SearchData = {
+    type: "SearchData",
+    recipes: null,
+    links: {
+    }
+  };
+
   return {
     props: {
-      Result: await SearchRecipes(Keyword, CurrentPage)
+      Result: (KeywordRaw !=="") ? await SearchRecipes(Keyword, CurrentPage) : Non
     }
   };
 }

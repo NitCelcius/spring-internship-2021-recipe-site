@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Recipe } from "./Recipe";
 import { APIError } from "./APIError";
 import MedMealNode from "./showcases/MedMealNode";
+import { SearchBox } from "./SearchBox";
 
 type Props = {
   page: number
@@ -34,10 +35,8 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
     <article>
       <h2 className="PageTitle">レシピ一覧</h2>
       <hr></hr>
-      <form id="SearchSect" name="Search" action="/search" method="GET">
-        <input id="SearchBox" type="text" placeholder="レシピを検索" name="q"></input>
-        <button id="SearchSubmit">GO</button>
-      </form>
+      <SearchBox />
+
       {/*
     {(!APIFeed) ? <p className="StatusLabel">LOADING</p> : ""}
     <section id="Feed">

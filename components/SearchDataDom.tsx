@@ -6,7 +6,8 @@ import { APIError } from "./APIError";
 import MedMealNode from "./showcases/MedMealNode";
 import { SearchData } from "./SearchData";
 import Link from "next/link";
-
+import { SearchBox } from "./SearchBox";
+import { css } from "@emotion/css"
 
 type Props = {
   page: number;
@@ -37,10 +38,8 @@ export const SearchDataDom: FC<Props> = (Props) => {
     <article>
       <h2 className="PageTitle"><span className="SearchWord">{Props.keyword}</span> の検索結果</h2>
       <hr></hr>
-      <form id="SearchSect" name="Search" action="/search" method="GET">
-        <input id="SearchBox" type="text" placeholder="レシピを検索" name="q"></input>
-        <button id="SearchSubmit">GO</button>
-      </form>
+      
+      <SearchBox />
       {/*
     {(!APIFeed) ? <p className="StatusLabel">LOADING</p> : ""}
     <section id="Feed">
@@ -76,6 +75,14 @@ function SearchDisplay(SearchObj: SearchData | APIError) {
           return (<div className="NotFoundDiv">
             <h2 className="HugeQuestion">&#x2753;</h2>
             <p className="Search_NotFound">該当するレシピが見つかりませんでした<br />キーワードを変えて再度お試しください</p>
+            <p className={css`
+              & {
+                color: #666;
+                font-style: italic;
+                font-size: 0.9rem;
+                text-align: center
+              }
+            `}>レシピには名前をつけてあげましょう</p>
             <p className="Search_Back"><Link href="/">新着レシピに戻る</Link></p>
           </div>);
         }

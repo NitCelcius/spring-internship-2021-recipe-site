@@ -1,8 +1,6 @@
 import { NullableImg } from "../NullableImg";
 import { Recipe } from "../Recipe";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import css from "@emotion/css"
 import React from "react";
 
 export default function MedMealNode(RecipeData: Recipe) {

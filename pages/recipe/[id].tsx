@@ -13,16 +13,40 @@ import { ApiError } from 'next/dist/next-server/server/api-utils';
 
 type Props = {
   RecipeData: Recipe;
+  RelatedRecipeData: Recipe[];
 }
 
 // It does return some stuff
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const TargetidRaw = (context.query.id instanceof Array) ? (context.query.id[0]) : context.query.id;
   const Targetid = (TargetidRaw) ? (parseInt(TargetidRaw)) : 1;
+  const RecipeData = await GetRecipe(Targetid);
+
+  let Waiters: Promise<Recipe | APIError>[] = [];
+  let RelRecipeData: Array<Recipe | APIError> | null = null;
+  let RelRecipes: Array<Recipe> = [];
+  if (RecipeData.type === "Recipe") {
+    RecipeData.related_recipes.map((id) => {
+      console.info(id);
+      Waiters.push(GetRecipe(id));
+    });
+    RelRecipeData = await Promise.all(Waiters);
+  }
+
+  if (RelRecipeData !== null) {
+    RelRecipeData.forEach((t) => {
+      if (RecipeData.type === "Recipe") {
+        console.info("Rel added");
+        console.info(t);
+        RelRecipes.push(t);
+      }
+    })
+  }
 
   return {
     props: {
-      RecipeData: await GetRecipe(Targetid)
+      RecipeData: RecipeData,
+      RelatedRecipeData: (RelRecipes !== null) ? RelRecipes : null
     }
   };
 }
@@ -72,25 +96,7 @@ async function GetRecipe(Recipeid: number): Promise<Recipe | APIError> {
 
 const App: NextPage<Props> = (props: Props) => {
   const router = useRouter();
-  const [APIFeed, setFeed] = useState<Recipe | APIError>();
-  const [page, SetPage] = useState<number>(1);
-  const [RelRecipeData, SetRelRecipes] = useState<Array<Recipe | APIError>>();
   const Recipe = props.RecipeData;
-
-  useEffect(() => {
-    (async () => {
-      let Waiters: Promise<Recipe | APIError>[] = [];
-      props.RecipeData.related_recipes.map((id) => {
-        console.info(id);
-        Waiters.push(GetRecipe(id));
-      });
-      const RelRecipes = await Promise.all(Waiters);
-      console.info("loading");
-      SetRelRecipes(RelRecipes);
-
-      return RelRecipes;
-    })
-  }, []);
 
   return (
     <div className={css`
@@ -224,7 +230,8 @@ const App: NextPage<Props> = (props: Props) => {
       </ul>
 
       <h2>🍳作り方</h2>
-      <table className="Meal_Steps">
+        <table className="Meal_Steps">
+          <tbody>
         {
           Recipe.steps.map((step, index) => {
             return (<tr key={"step_"+index}>
@@ -232,18 +239,37 @@ const App: NextPage<Props> = (props: Props) => {
               <td>{step}</td>
             </tr>)
           })
-        }
+            }
+          </tbody>
         </table>
         
       </section>
 
-      <section>
+      <hr />
+      
+      <section className={css`
+        & {
+          margin: 2rem min(.5rem, 2%);
+        }
+      `}>
         <h2>関連するレシピ</h2>
-        {((RelRecipeData) ? RelRecipeData.map((RecipeId) => {
+        <div className={css`
+          & {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+          }
+
+          &>* {
+            width: calc(33% - 1rem);
+          }
+        `}>
+        {((props.RelatedRecipeData) ? props.RelatedRecipeData.map((RecipeId) => {
               if (RecipeId.type === "Recipe") {
                 return SmallMealNode(RecipeId);
             } // SKIP ERRORS!!!
-          }) : "LOADING")}
+        }) : "LOADING")}
+        </div>
       </section>
       {/*
       <Router>
