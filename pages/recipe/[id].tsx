@@ -35,7 +35,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   if (RelRecipeData !== null) {
     RelRecipeData.forEach((t) => {
-      if (RecipeData.type === "Recipe") {
+      if (t.type === "Recipe") {
         console.info("Rel added");
         console.info(t);
         RelRecipes.push(t);
