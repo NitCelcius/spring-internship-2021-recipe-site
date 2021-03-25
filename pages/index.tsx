@@ -46,6 +46,7 @@ async function GetRecipeFeed(SelectPage: number): Promise<RecipeFeedData | APIEr
       console.error("API key is not set!?");
     }
 
+    console.info(API_URL+"/recipes?page="+encodeURIcomponent(SelectPage));
     fetch(API_URL + "/recipes?page=" + encodeURIComponent(SelectPage), {
       method: "GET",
       headers: ReqHeaders,
