@@ -4,7 +4,7 @@ import { APIError } from "../components/APIError";
 import { BrowserRouter, Route, Link, Switch, useLocation, Router } from "react-router-dom";
 import { RecipeFeedDom } from '../components/RecipeFeedDom';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   Feed: RecipeFeedData;
@@ -30,32 +30,33 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (CurrentPageRaw instanceof Array) { CurrentPageRaw = CurrentPageRaw[0] } // override, why array?
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 
-  var OutFeed = await GetRecipeFeed(CurrentPage);
   return {
     props: {
-      Feed: OutFeed
+      Feed: await GetRecipeFeed(CurrentPage)
     }
-  }
+  };
 }
 
 async function GetRecipeFeed(SelectPage: number): Promise<RecipeFeedData | APIError> {
   return new Promise((Resolve, Reject) => {
     // Not really nullable
     const API_URL: string = process.env.REACT_APP_API_URL ?? "";
-    const API_TOKEN: string = process.env.REACT_APP_API_TOKEN ?? "";
+    const API_TOKEN: string = process.env.REACT_APP_API_KEY ?? "";
 
     const ReqHeaders: HeadersInit = new Headers();
     ReqHeaders.set("x-api-key", API_TOKEN);
     ReqHeaders.set("Content-Type", "application/json");
-
-    console.info(API_URL + "recipes?page=" + encodeURIComponent(SelectPage));
 
     if (!API_URL) {
       console.error("API URL is not set!?");
       return false;
     }
 
-    fetch(API_URL + "?page=" + encodeURIComponent(SelectPage), {
+    if (!API_TOKEN) {
+      console.error("API key is not set!?");
+    }
+
+    fetch(API_URL + "recipes?page=" + encodeURIComponent(SelectPage), {
       method: "GET",
       headers: ReqHeaders,
     }
@@ -64,7 +65,7 @@ async function GetRecipeFeed(SelectPage: number): Promise<RecipeFeedData | APIEr
         if (jdt.message) {
           var Re = jdt as APIError;
           Re.type = "APIError"; // !??!?!??!
-          console.error("server returned error")
+          console.error("server returned an error");
           Reject(Re);
         } else {
           var Rf = jdt as RecipeFeedData;
@@ -72,15 +73,15 @@ async function GetRecipeFeed(SelectPage: number): Promise<RecipeFeedData | APIEr
           Resolve(Rf);
         }
       }).catch((err) => {
-        console.error("JSON err")
+        console.error("server returned non-JSON!?");
         Reject(err);
       });
     })
   })
 }
 
-const App = (props: Props) => {
-  console.info(props);
+const App: NextPage<Props> = (props: Props) => {
+  console.warn(props);
   const router = useRouter();
   const [APIFeed, setFeed] = useState<RecipeFeedData | APIError>();
   const [page, SetPage] = useState<number>(1);
@@ -96,7 +97,7 @@ const App = (props: Props) => {
       <h1>CookyStash</h1>
     </header>
 
-      <RecipeFeedDom page={1} Feed={props.Feed}></RecipeFeedDom>
+      <RecipeFeedDom page={-1} Feed={props.Feed}></RecipeFeedDom>
     
     {/*
       <Router>
