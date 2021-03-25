@@ -1,0 +1,191 @@
+/* Who made default margin in body tag?! */
+body {
+  background-color: #f2f2f2;
+  font-family: -apple-system,
+    Roboto,
+    "Meiryo",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Apple Color Emoji",
+    "Noto Color Emoji",
+    "Noto Emoji";
+  margin: auto;
+  max-width: 50rem;
+  line-height: 1.5;
+
+}
+
+body>* {
+  background-color: #fff;
+}
+
+article {
+  box-shadow: -.2rem .2rem .2rem 0rem #ddd,
+    .2rem .2rem .2rem .0rem #ddd;
+  border-left: 1px #eee solid;
+  border-right: 1px #eee solid;
+  margin: 1rem 0 0 0;
+  padding: 0 min(0.5rem, 2vw);
+  z-index: -1;
+}
+
+header {
+  box-shadow: -.2rem 0rem .2rem 0rem #ddd,
+    .2rem 0rem .2rem .0rem #ddd,
+    .0rem .2rem .2rem .0rem #ccc;
+  border-left: 1px #eee solid;
+  border-right: 1px #eee solid;
+  display: flex;
+  padding: 0;
+  background-color: #FFF0D0;
+}
+
+header>h1 {
+  font-weight: lighter;
+  width: 100%;
+  height: 3rem;
+  margin: 0rem 1rem;
+  padding: .5rem 0;
+  font-size: 1.2rem;
+  letter-spacing: .3rem;
+  text-align: center;
+  
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+}
+
+article>* {
+  width: 100%;
+}
+
+article h2:before {
+  content: "\01F37D";
+}
+
+article h2 {
+  margin: 1rem 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px #aaa solid;
+}
+
+#SearchSect {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+  padding: 0 min(1rem, 3%);
+  height: 2.5rem;
+  margin: 1rem 0;
+}
+
+#SearchBox {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1.1rem;
+  box-sizing: border-box;
+  padding: 0 1rem;
+}
+
+#SearchSubmit {
+  box-sizing: border-box;
+  padding: 0 1rem;
+  margin-left: .5rem;
+}
+
+#Feed { 
+  box-sizing: border-box;
+  padding: 2rem 1rem;
+}
+
+/* imitates background */
+footer {
+  background-color: #f2f2f2;
+  display: flex;
+  flex-direction: column;
+}
+
+footer>p {
+  text-align: center;
+  font-style: italic;
+  color: #aaa;
+}
+
+.MealTitle {
+  font-size: 1.7rem;
+  margin: 0 0 .5rem 0;
+}
+
+.MealWrapper {
+  padding: 1rem;
+  border: 1px #ddd solid;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-sizing: border-box;
+}
+
+.MealImg {
+  width: 100%;
+  border: 2px #eee0 solid;
+  border-radius: min(3%, 1rem); /* IT LOOKS ROUND!!! */
+  box-shadow: 0 0 .2rem .2rem #e0e0e0;
+  display: flex;
+}
+
+img.MealImg {
+  image-rendering: crisp-edges;
+  object-fit: contain;
+}
+
+div.MealImg>p {
+  margin: auto;
+  text-align: center;
+}
+
+.MealImgFix {
+  display: flex;
+  flex: 4;
+  width: 57%;
+  margin: 0 .3rem 0 0;
+  min-height: 5rem;
+}
+
+.MealDesc {
+  font-size: 1.1rem;
+  color: #444;
+  flex: 3;
+  margin: 0 0 0 .3rem;
+  text-indent: 1rem;
+  word-break: break-all; /* If not really readable let me know */
+}
+
+.HDivider {
+  display: flex;
+  flex-direction: row;
+}
+
+.HDivider>* {
+}
+
+.PageTitle {
+  font-size: 2rem;
+  text-indent: 1rem;
+}
+
+@media (max-width: 30rem) {
+  .MealContent {
+    flex-direction: column;
+  }
+
+  .MealImgFix {
+    width: 100%;
+  }
+
+  .MealDesc {
+    margin-top: 1rem;
+  }
+}
