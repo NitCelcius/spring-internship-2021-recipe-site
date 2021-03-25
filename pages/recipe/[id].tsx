@@ -8,6 +8,8 @@ import { Header } from '../../components/common/Header';
 import { Footer } from '../../components/common/Footer';
 import { NullableImg } from '../../components/NullableImg';
 import { css } from "@emotion/css";
+import SmallMealNode from '../../components/showcases/SmallMealNode';
+import { ApiError } from 'next/dist/next-server/server/api-utils';
 
 type Props = {
   RecipeData: Recipe;
@@ -72,7 +74,23 @@ const App: NextPage<Props> = (props: Props) => {
   const router = useRouter();
   const [APIFeed, setFeed] = useState<Recipe | APIError>();
   const [page, SetPage] = useState<number>(1);
+  const [RelRecipeData, SetRelRecipes] = useState<Array<Recipe | APIError>>();
   const Recipe = props.RecipeData;
+
+  useEffect(() => {
+    (async () => {
+      let Waiters: Promise<Recipe | APIError>[] = [];
+      props.RecipeData.related_recipes.map((id) => {
+        console.info(id);
+        Waiters.push(GetRecipe(id));
+      });
+      const RelRecipes = await Promise.all(Waiters);
+      console.info("loading");
+      SetRelRecipes(RelRecipes);
+
+      return RelRecipes;
+    })
+  }, []);
 
   return (
     <div className={css`
@@ -126,6 +144,7 @@ const App: NextPage<Props> = (props: Props) => {
         border-bottom: 1px #ddd solid;
       }
 
+      /* Can this have V-align: botton? */
       .Ingr_Name {
         font-size: 1.0rem;
       }
@@ -137,8 +156,10 @@ const App: NextPage<Props> = (props: Props) => {
 
       }
 
-      .Ingr_Emp {
+      .Ingr_Emph { /* DUEs emphasize */
         font-size: 1.3rem;
+        font-weight: bolder;
+        color: #e78009;
       }
 
       .Meal_Steps {
@@ -172,7 +193,11 @@ const App: NextPage<Props> = (props: Props) => {
         word-break: keep-all;
       }
 
-`}>
+      .MealImg>p {
+        text-align: center;
+      }
+
+      `}>
       <Header />
 
       <section className="Recipe">
@@ -210,6 +235,15 @@ const App: NextPage<Props> = (props: Props) => {
         }
         </table>
         
+      </section>
+
+      <section>
+        <h2>関連するレシピ</h2>
+        {((RelRecipeData) ? RelRecipeData.map((RecipeId) => {
+              if (RecipeId.type === "Recipe") {
+                return SmallMealNode(RecipeId);
+            } // SKIP ERRORS!!!
+          }) : "LOADING")}
       </section>
       {/*
       <Router>
@@ -268,14 +302,43 @@ function SqlizeDate(TargetDate: Date) {
 //((((大|小)さじ|)[0-9]*([枚束個本株玉袋粒節把房つ塊原頭斤缶杯足]|かけ|パック|切れ|))|少々|適宜|適量)
 
 function Ingr_Format(Quantity: string) {
-  const NumReg = new RegExp("([0-9]|\.)*");
-  return Array.from(Quantity).map((chr) => {
-    if (NumReg.test(chr)) {
-      return <span className="Ingr_Emp">{chr}</span>
-    } else {
-      return chr;
+  // oof. really non-capturing.
+  const NumReg = new RegExp("(?:(?:(?:(?:(?:大|小)さじ)|[0-9]|/|分の+))|少々|適宜|適量)+", "gu");
+
+  //const NumReg = new RegExp("(?:(?:(?:(?:(?:大|小)さじ)|[0-9]+)(?:[枚束個本株玉袋粒節把房つ塊原頭斤缶杯足]|かけ|パック|切れ|))|少々|適宜|適量)+", "gu");
+  let rs = []; //wow it was just an array???
+
+  const nr = Quantity.matchAll(NumReg);
+  if (nr) {
+    // DUEs("due" aka deadline's closing), Damn-Units-Emphasizing-Stuff. no efficiency, just for fun
+    // Note, if you wish to read this section, notice magic numbers used in this stuff
+    let PrevIndex = 0;
+    for (let i = 0; i < Quantity.length; i) {
+      let NoneFound = true;
+      for (const MatchData of nr) {
+        //console.warn(MatchData);
+        //console.info(i + ", " + MatchData);
+        //console.info("last:"+PrevIndex+" "+MatchData.index + ">=" + i + "/" +Quantity.length);
+        if ((MatchData.index !== undefined) && i <= MatchData.index) {
+          //console.info("Append "+MatchData+", length="+MatchData[0].length);
+          rs.push(Quantity.substring(i-1, MatchData.index));
+          rs.push(<span className="Ingr_Emph">{MatchData}</span>);
+          i = MatchData.index + MatchData[0].length + 1;
+          NoneFound = false;
+        }
+        PrevIndex = i;
+        if (NoneFound) { break; }
+      }
+      if (NoneFound) { break; }
     }
-  })
+    if (PrevIndex <= Quantity.length) {
+      //console.info("Continue");
+      rs.push(Quantity.substring(PrevIndex -1, Quantity.length));
+    }
+    return rs;
+  } else {
+    return Quantity;
+  }
 }
 
 export default App;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useState, } from 'react';
 import { RecipeFeedData } from "../components/RecipeFeedData";
 import { APIError } from "../components/APIError";
 import { BrowserRouter, Route, Link, Switch, useLocation, Router } from "react-router-dom";
@@ -109,10 +109,19 @@ const App: NextPage<Props> = (props: Props) => {
 
       .MealWrapper {
         padding: 1rem;
+        background-color: #fff;
         border: 1px #ddd solid;
         border-radius: 8px;
         margin-bottom: 2rem;
         box-sizing: border-box;
+        cursor: pointer;
+        transition: .2s linear 0s;
+        transition-property: background, border
+      }
+
+      .MealWrapper:hover {
+        border: 1px #666 solid;
+        background-color: #ddd;
       }
 
       .MealImg {
@@ -132,6 +141,23 @@ const App: NextPage<Props> = (props: Props) => {
       div.MealImg>p {
         margin: auto;
         text-align: center;
+      }
+
+      .MealImgFix {
+        display: flex;
+        flex: 4;
+        width: 57%;
+        margin: 0 .3rem 0 0;
+        min-height: 5rem;
+      }
+
+      .MealDesc {
+        font-size: 1.1rem;
+        color: #444;
+        flex: 3;
+        margin: 0 0 0 .3rem;
+        text-indent: 1rem;
+        word-break: break-all; /* If not      really readable let me know */
       }
 
       `

@@ -1,11 +1,9 @@
 import { NullableImg } from "../NullableImg";
 import { Recipe } from "../Recipe";
-import { useRouter } from "next/router";
 import Link from "next/link";
-import css from "@emotion/css"
 import React from "react";
 
-export default function MedMealNode(RecipeData: Recipe) {
+export default function SmallMealNode(RecipeData: Recipe) {
   return (
     /* Somehow I want to remove these Link and use onclick & hover */
     <Link href={"/recipe/" + RecipeData.id} key={RecipeData.id}>
