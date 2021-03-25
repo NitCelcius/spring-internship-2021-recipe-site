@@ -24,10 +24,9 @@ function GetQuery(ParamName: string): string | null {
   }
 }
 
-//TODO: fix this any
+// It does return some stuff
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  var CurrentPageRaw = (context.query.page);
-  if (CurrentPageRaw instanceof Array) { CurrentPageRaw = CurrentPageRaw[0] } // override, why array?
+  const CurrentPageRaw = (context.query.page instanceof Array) ? (context.query.page[0]) : context.query.page;
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 
   return {
@@ -56,19 +55,20 @@ async function GetRecipeFeed(SelectPage: number): Promise<RecipeFeedData | APIEr
       console.error("API key is not set!?");
     }
 
-    fetch(API_URL + "recipes?page=" + encodeURIComponent(SelectPage), {
+//    fetch(API_URL + "recipes?page=" + encodeURIComponent(SelectPage), {
+    fetch(API_URL + "?page=" + encodeURIComponent(SelectPage), {
       method: "GET",
       headers: ReqHeaders,
     }
     ).then((resp) => {
-      resp.json().then((jdt) => {
-        if (jdt.message) {
-          var Re = jdt as APIError;
+      resp.json().then((JsData) => {
+        if (JsData.message) {
+          let Re = JsData as APIError;
           Re.type = "APIError"; // !??!?!??!
           console.error("server returned an error");
           Reject(Re);
         } else {
-          var Rf = jdt as RecipeFeedData;
+          let Rf = JsData as RecipeFeedData;
           Rf.type = "RecipeFeedData"; // !??!?!??!
           Resolve(Rf);
         }
@@ -86,7 +86,7 @@ const App: NextPage<Props> = (props: Props) => {
   const [APIFeed, setFeed] = useState<RecipeFeedData | APIError>();
   const [page, SetPage] = useState<number>(1);
 
-  var CurrentPageRaw = (router.query.page);
+  let CurrentPageRaw = (router.query.page);
   if (CurrentPageRaw instanceof Array) { CurrentPageRaw = CurrentPageRaw[0] } // override, why array?
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 

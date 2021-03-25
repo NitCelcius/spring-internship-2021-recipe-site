@@ -89,6 +89,8 @@ hr {
   font-size: 1.1rem;
   box-sizing: border-box;
   padding: 0 1rem;
+  line-height: 5;
+  border-radius: 5px;
 }
 
 #SearchSubmit {

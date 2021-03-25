@@ -5,10 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { Recipe } from "./Recipe";
 import { NullableImg } from "./NullableImg";
 
-const API_URL: string = process.env.REACT_APP_API_URL ?? "";
-// This token is gonna be gone
-const API_TOKEN: string = process.env.REACT_APP_API_TOKEN ?? "";
-
 type Props = {
   page: number
   Feed: RecipeFeedData
@@ -35,12 +31,12 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
   }
 
   return (
-  <article>
-    <h2 className="PageTitle">レシピ一覧</h2>
-    <hr></hr>
-    <form id="SearchSect" name="Search" action="/search" method="GET">
-      <input id="SearchBox" type="text" placeholder="レシピを検索" name="q"></input>
-      <button id="SearchSubmit">GO</button>
+    <article>
+      <h2 className="PageTitle">レシピ一覧</h2>
+      <hr></hr>
+      <form id="SearchSect" name="Search" action="/search" method="GET">
+        <input id="SearchBox" type="text" placeholder="レシピを検索" name="q"></input>
+        <button id="SearchSubmit">GO</button>
       </form>
       {/*
     {(!APIFeed) ? <p className="StatusLabel">LOADING</p> : ""}
@@ -52,7 +48,7 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
       */}
       {
         <section id="Feed">
-          {(Props.Feed) ? FeedDisplay(Props.Feed): <p>loading</p>}
+          {(Props.Feed) ? FeedDisplay(Props.Feed) : <p>loading</p>}
         </section>
       }
       {
@@ -65,12 +61,13 @@ export const RecipeFeedDom: FC<Props> = (Props) => {
 
 import { APIError } from "./APIError";
 
-export function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
+function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
   if (FeedObj) {
     switch (FeedObj.type) {
       case "RecipeFeedData": {
-        var Fd = FeedObj.recipes.map((targetRecipe) => {
-          var r = targetRecipe as Recipe;
+         
+        return FeedObj.recipes.map((targetRecipe) => {
+          const r = targetRecipe as Recipe;
           return (
             <div className="MealWrapper" key={r.id}>
               <h3 className="MealTitle">{r.title}</h3>
@@ -80,7 +77,6 @@ export function FeedDisplay(FeedObj: RecipeFeedData | APIError) {
               </div>
             </div>);
         });
-        return Fd;
       }
 
       case "APIError": {

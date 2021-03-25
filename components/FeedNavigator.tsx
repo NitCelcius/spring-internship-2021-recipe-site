@@ -17,15 +17,14 @@ export function FeedNavigator(LinkObj: PageLinks) {
   //const [PrevFlag, SetPrevState] = useState<boolean>();
   //const [NextFlag, SetNextState] = useState<boolean>();
 
-  var CurrentPageRaw = (router.query.page);
-  if (CurrentPageRaw instanceof Array) { CurrentPageRaw = CurrentPageRaw[0] } // override, why array?
+  const CurrentPageRaw = (router.query.page instanceof Array) ? router.query.page[0] : router.query.page;
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 
   //SetPrevState((LinkObj.prev) ? true : false);
   //SetNextState((LinkObj.next) ? true : false);
 
-  var PrevLink = <button disabled={false} onClick={() => APISwitchHandler(CurrentPage - 1)}>前のページへ</button>
-  var NextLink = <button disabled={false} onClick={() => APISwitchHandler(CurrentPage + 1)}>次のページへ</button>
+  const PrevLink = <button disabled={false} onClick={() => APISwitchHandler(CurrentPage - 1)}>前のページへ</button>
+  const NextLink = <button disabled={false} onClick={() => APISwitchHandler(CurrentPage + 1)}>次のページへ</button>
 
   return (<div className="FeedLinks">{PrevLink}{NextLink}</div>);
 }
