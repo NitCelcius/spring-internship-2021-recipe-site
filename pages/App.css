@@ -117,36 +117,7 @@ footer>p {
   color: #aaa;
 }
 
-.MealTitle {
-  font-size: 1.7rem;
-  margin: 0 0 .5rem 0;
-}
 
-.MealWrapper {
-  padding: 1rem;
-  border: 1px #ddd solid;
-  border-radius: 8px;
-  margin-bottom: 2rem;
-  box-sizing: border-box;
-}
-
-.MealImg {
-  width: 100%;
-  border: 2px #eee0 solid;
-  border-radius: min(3%, 1rem); /* IT LOOKS ROUND!!! */
-  box-shadow: 0 0 .2rem .2rem #e0e0e0;
-  display: flex;
-}
-
-img.MealImg {
-  image-rendering: crisp-edges;
-  object-fit: contain;
-}
-
-div.MealImg>p {
-  margin: auto;
-  text-align: center;
-}
 
 .MealImgFix {
   display: flex;
