@@ -8,6 +8,7 @@ import { SearchData } from "./SearchData";
 import Link from "next/link";
 import { SearchBox } from "./SearchBox";
 import { css } from "@emotion/css"
+import { PageLinks } from "./PageLinks";
 
 type Props = {
   page: number;
@@ -16,7 +17,12 @@ type Props = {
 };
 
 export const SearchDataDom: FC<Props> = (Props) => {
-  const [APIFeed, setFeed] = useState<SearchData | APIError>();
+  const [Links, SetLinks] = useState<PageLinks>();
+
+  useEffect(() => {
+    console.info("SET");
+    SetLinks(Props.result?.links);
+  }, [Props.result?.links])
 
   {/*
     useEffect(() => {
@@ -40,23 +46,14 @@ export const SearchDataDom: FC<Props> = (Props) => {
       <hr></hr>
       
       <SearchBox />
-      {/*
-    {(!APIFeed) ? <p className="StatusLabel">LOADING</p> : ""}
-    <section id="Feed">
-      {(APIFeed) ? FeedDisplay(APIFeed) : <p className="StatusLabel"> LOADING</p>}
-    </section>
-
-      {((APIFeed) && APIFeed.type === "RecipeFeedData") ? FeedNavigator(APIFeed.links) : ""}
-      */}
       {
         <section id="Feed">
           {(Props.result) ? SearchDisplay(Props.result) : <p>loading</p>}
         </section>
       }
       {
-        (Props.result) && (Props.result.type === "SearchData") && (Props.result.recipes) ? FeedNavigator(Props.result.links) : ""
+        (Props.result) && (Props.result.type === "SearchData") && (Props.result.recipes) && Links ? FeedNavigator(Links) : ""
       }
-
     </article>
   )
 }

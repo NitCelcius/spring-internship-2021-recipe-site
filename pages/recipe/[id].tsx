@@ -196,7 +196,6 @@ const App: NextPage<Props> = (props: Props) => {
       .Meal_Steps td {
         padding-left: 0.5rem;
         border-left: 1px #ddd solid;
-        word-break: keep-all;
       }
 
       .MealImg>p {
@@ -258,10 +257,12 @@ const App: NextPage<Props> = (props: Props) => {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            justify-content: center;
+            text-align: center;
           }
 
           &>* {
-            width: calc(33% - 1rem);
+            width: max(calc(33% - 1rem), 15rem);
           }
         `}>
         {((props.RelatedRecipeData) ? props.RelatedRecipeData.map((RecipeId) => {
