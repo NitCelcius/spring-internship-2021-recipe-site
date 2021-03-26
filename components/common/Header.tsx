@@ -39,7 +39,7 @@ export const Header = () => {
 
     `}>
       <Link href="/"><h1>CookyStash</h1></Link>
-      <Link href="/favs">お気に入り</Link>
+      <Link href="/new">新規投稿(β)</Link>
     </header>
   )
 }

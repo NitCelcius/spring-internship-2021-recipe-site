@@ -14,7 +14,7 @@ export function SearchBox() {
   }
 
   return (<form id="SearchSect" name="Search" action="/search" method="GET" onSubmit={SearchChecker}>
-    <input id="SearchBox" type="text" placeholder="レシピを検索" name="q" onChange={(evt) => UpdateQ(evt.target.value)}></input>
+    <input id="SearchBox" type="search" placeholder="レシピを検索" name="q" onChange={(evt) => UpdateQ(evt.target.value)}></input>
     <button type="submit" id="SearchSubmit">GO</button>
   </form>);
 }

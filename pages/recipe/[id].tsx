@@ -9,7 +9,6 @@ import { Footer } from '../../components/common/Footer';
 import { NullableImg } from '../../components/NullableImg';
 import { css } from "@emotion/css";
 import SmallMealNode from '../../components/showcases/SmallMealNode';
-import { ApiError } from 'next/dist/next-server/server/api-utils';
 
 type Props = {
   RecipeData: Recipe;
