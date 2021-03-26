@@ -1,7 +1,6 @@
 import React, { useState, } from 'react';
 import { RecipeFeedData } from "../components/RecipeFeedData";
 import { APIError } from "../components/APIError";
-import { BrowserRouter, Route, Link, Switch, useLocation, Router } from "react-router-dom";
 import { RecipeFeedDom } from '../components/RecipeFeedDom';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, NextPage } from "next";
@@ -99,39 +98,11 @@ const App: NextPage<Props> = (props: Props) => {
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 
   return (
-
-    /* CSS snippets not working :pien: */
-    // RIP, no specific CSS
-    <div className={
-      css` 
-
-      `
-    }
-
-    > <Header /> <RecipeFeedDom page={
-      CurrentPage
-    }
-
-      Feed={
-        props.Feed
-      }
-
-    ></RecipeFeedDom> {
-        /*
-        <Router>
-          <Route exact path="/" render={() =>
-            (APIFeed) ? <RecipeFeedDom Feed={APIFeed} /> : <p>LOADING</p>
-          }>
-            <Link to="/d">to D</Link>
-          </Route>
-          <Route path="*">
-            <p>AAA</p>
-          </Route>
-        </Router>
-        */
-      }
-
-      <Footer /> </div>);
+    <React.Fragment>
+      <Header />
+      <RecipeFeedDom page={CurrentPage} Feed={props.Feed} />
+      <Footer />
+    </React.Fragment>);
 }
 
 export default App;

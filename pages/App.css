@@ -29,30 +29,6 @@ article {
   z-index: -1;
 }
 
-header {
-  position: sticky;
-  top: 0;
-  box-shadow: -.2rem 0rem .2rem 0rem #ddd,
-    .2rem 0rem .2rem .0rem #ddd,
-    .0rem .2rem .2rem .0rem #ccc;
-  border-left: 1px #eee solid;
-  border-right: 1px #eee solid;
-  display: flex;
-  padding: 0;
-  background-color: #FFF0D0;
-}
-
-header>h1 {
-  font-weight: lighter;
-  width: 100%;
-  margin: 0rem 1rem;
-  padding: .5rem 0;
-  font-size: 1.2rem;
-  letter-spacing: .3rem;
-  text-align: center;
-  cursor: pointer;
-}
-
 article {
   display: flex;
   flex-direction: column;
