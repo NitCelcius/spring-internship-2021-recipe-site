@@ -18,16 +18,20 @@ export function FeedNavigator(LinkObj: PageLinks) {
     });
   }
 
-  const [PrevFlag, SetPrevState] = useState<string>();
-  const [NextFlag, SetNextState] = useState<string>();
+  //const [PrevFlag, SetPrevState] = useState<string>();
+  //const [NextFlag, SetNextState] = useState<string>();
+  const [PrevFlag, SetPrevState] = useState<boolean>();
+  const [NextFlag, SetNextState] = useState<boolean>();
 
   const CurrentPageRaw = (router.query.page instanceof Array) ? router.query.page[0] : router.query.page;
   const CurrentPage = (CurrentPageRaw) ? (parseInt(CurrentPageRaw)) : 1;
 
   useEffect(() => {
     console.info("SET");
-    SetPrevState((LinkObj.prev) ? "" : "disabled");
-    SetNextState((LinkObj.next) ? "" : "disabled");
+    SetPrevState((LinkObj.prev) ? false : true);
+    SetNextState((LinkObj.next) ? false : true);
+    //SetPrevState((LinkObj.prev) ? "" : "disabled");
+    //SetNextState((LinkObj.next) ? "" : "disabled");
   }, [LinkObj]);
 
   let Back2Init = <button onClick={() => APISwitchHandler(1)} className="Nav_Init">最初へ戻る</button>
